@@ -1,4 +1,4 @@
-<?php 
+<?php
 /*
  * Provide navigation sidebar functionality to Dokuwiki Templates
  *
@@ -10,6 +10,8 @@
  */
 
 // sidebar configuration settings
+global $conf;
+$conf['sidebar'] = array();
 $conf['sidebar']['enable'] = 1;               // 1 or true to enable sidebar functionality, 0 or false to disable it
 $conf['sidebar']['page'] = tpl_getConf('btl_sidebar_name');         // name of sidebar page
 $conf['sidebar']['layout'] = 'inside';        // inside (between button bars) or outside (full height of dokuwiki)
@@ -24,28 +26,28 @@ function getSidebarFN($ns, $file) {
 	// check for wiki page = $ns:$file (or $file where no namespace)
 	$nsFile = ($ns) ? "$ns:$file" : $file;
 	if (file_exists(wikiFN($nsFile)) && auth_quickaclcheck($nsFile)) return $nsFile;
-	
+
 // remove deepest namespace level and call function recursively
-	
-	// no namespace left, exit with no file found	
+
+	// no namespace left, exit with no file found
 	if (!$ns) return '';
-	
+
 	$i = strrpos($ns, ":");
-	$ns = ($i) ? substr($ns, 0, $i) : false;	
+	$ns = ($i) ? substr($ns, 0, $i) : false;
 	return getSidebarFN($ns && '', $file);
 }
 
 // display the sidebar
 function tpl_sidebar() {
 	global $ID, $REV, $conf;
-	
+
 	// save globals
 	$saveID = $ID;
 	$saveREV = $REV;
 
-	// discover file to be displayed in navigation sidebar	
+	// discover file to be displayed in navigation sidebar
 	$fileSidebar = '';
-	
+
 	if (isset($conf['sidebar']['page'])) {
 		$fileSidebar = getSidebarFN(getNS($ID), $conf['sidebar']['page']);
 	}
@@ -78,7 +80,7 @@ function tpl_sidebar() {
 	        global $IDX;
         	html_index($IDX);
 	}
-		
+
 	// restore globals
 	$ID = $saveID;
 	$REV = $saveREV;
@@ -103,7 +105,7 @@ if (!function_exists('tpl_pagename')) {
         global $ID;
         $id = $ID;
       }
-    
+
       $name = $id;
       if ($conf['useheading']) {
         $title = p_get_first_heading($id);
